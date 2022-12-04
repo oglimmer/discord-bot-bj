@@ -1,7 +1,7 @@
 {
   "name": "discord-bot-blackjack",
   "version": "1.0.0",
-  "description": "",
+  "description": "a discord bot to play blackjack",
   "main": "src/index.ts",
   "scripts": {
     "dev": "nodemon src/index.ts",

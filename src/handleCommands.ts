@@ -1,7 +1,6 @@
 import { IStoreElement, Store } from './store'
 import { getBet, getHighscore, getPlayer, postBet, postDeck, postDouble, postGame, postHit, postInsurance, postPlayer, postSplit, postStand } from './remote-api'
 import {
-  BaseGuildEmoji,
   CommandInteraction,
   CommandInteractionOptionResolver
 } from 'discord.js'
