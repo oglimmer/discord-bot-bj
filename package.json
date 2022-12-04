@@ -2,20 +2,35 @@
   "name": "discord-bot-blackjack",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.ts",
+    "start": "ts-node src/index.ts",
+    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
+    "lint-fix": "eslint --ignore-path .eslintignore --ext .js,.ts . --fix"
   },
-  "author": "oglimmer",
+  "author": "Oli Zimpasser",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.15.0",
-    "@discordjs/rest": "^0.5.0",
-    "discord-api-types": "^0.33.5",
-    "discord.js": "^13.8.0",
-    "got": "^11.8.5"
+    "@discordjs/builders": "^1.4.0",
+    "@discordjs/rest": "^1.4.0",
+    "@types/node": "^18.11.9",
+    "axios": "^1.2.0",
+    "discord-api-types": "^0.37.20",
+    "discord.js": "^14.7.0",
+    "sqlite": "^4.1.2",
+    "sqlite3": "^5.1.2",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
-    "eslint": "^8.17.0"
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "eslint-config-standard-with-typescript": "^23.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "nodemon": "^2.0.20",
+    "typescript": "^4.9.3"
   }
 }
