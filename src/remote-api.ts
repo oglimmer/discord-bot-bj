@@ -126,7 +126,7 @@ export const postSplit = async (storeElement: IStoreElement): Promise<IPostSplit
   return betData
 }
 
-export const postInsurance = async (storeElement: IStoreElement, insurance: number): Promise<IPostInsurance> => {
-  const { data } = await axios.post<any, AxiosResponse<IPostInsurance>>(`${SERVER_ROOT}/v2/game/${storeElement.gameId ?? 'UNDEFINED'}/bet/${storeElement.betId ?? 'UNDEFINED'}/insurance`, { insurance })
+export const postInsurance = async (storeElement: IStoreElement, insuranceBuy: string): Promise<IPostInsurance> => {
+  const { data } = await axios.post<any, AxiosResponse<IPostInsurance>>(`${SERVER_ROOT}/v2/game/${storeElement.gameId ?? 'UNDEFINED'}/bet/${storeElement.betId ?? 'UNDEFINED'}/insurance`, { insurance: insuranceBuy })
   return data
 }

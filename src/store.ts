@@ -1,6 +1,5 @@
 import sqlite3 from 'sqlite3'
 import { open, Database } from 'sqlite'
-import { IGetPlayerResponse } from './remote-api'
 
 import config from './config'
 
@@ -13,6 +12,7 @@ export interface IStoreElement {
   secondBetId?: number
   followActions: string
   secondBetFollowActions?: string
+  lastUpdateDate: Date | string
 }
 
 export class Store {
@@ -39,19 +39,33 @@ export class Store {
       betId INTEGER NULL,
       secondBetId INTEGER NULL,
       followActions VARCHAR NULL,
-      secondBetFollowActions VARCHAR NULL
+      secondBetFollowActions VARCHAR NULL,
+      lastUpdateDate TEXT NOT NULL
       )`)
   }
 
   public async get (userTag: string): Promise<IStoreElement> {
-    let row = await this.db.get('SELECT * FROM gameData WHERE userTag = ?', userTag)
-    if (row === undefined) {
-      row = {
-        userTag
+    let row: IStoreElement | undefined = await this.db.get('SELECT * FROM gameData WHERE userTag = ?', userTag)
+    if (row) {
+      // sqlite has not date/time support. the date is stored as a string in format "2022-12-04 22:12:46", but in UTC without Z at the end
+      row.lastUpdateDate = new Date(`${row.lastUpdateDate as string}Z`)
+      if ((row.lastUpdateDate.getTime() + (1000 * 60 * 55)) < new Date().getTime()) { // remove after 55 minutes
+        row = {
+          userTag,
+          followActions: '',
+          lastUpdateDate: new Date()
+        }
+        await this.cleanup(userTag, 0)
       }
-      await this.db.run('INSERT INTO gameData (userTag) VALUES (?)', userTag)
+    } else {
+      row = {
+        userTag,
+        followActions: '',
+        lastUpdateDate: new Date()
+      }
+      await this.db.run('INSERT INTO gameData (userTag, lastUpdateDate) VALUES (?, datetime(\'now\'))', userTag)
     }
-    return row as IStoreElement
+    return row
   }
 
   public async save (storeElement: IStoreElement): Promise<void> {
@@ -59,12 +73,11 @@ export class Store {
       storeElement.playerId, storeElement.deckId, storeElement.gameId, storeElement.betId, storeElement.secondBetId, storeElement.followActions, storeElement.secondBetFollowActions, storeElement.userTag)
   }
 
-  public async cleanup (storeElement: IStoreElement, data: IGetPlayerResponse): Promise<void> {
-    // const { data } = await axios.get<any, AxiosResponse<IGetPlayerResponse>>(`${SERVER_ROOT}/v2/player/${storeElement.playerId ?? 'undefined'}`)
-    if (data.cash === 0) {
-      await this.db.run('UPDATE gameData SET playerId=0, gameId=0, betId=0, secondBetId=0, followActions=null, secondBetFollowActions=null WHERE userTag = ?', storeElement.userTag)
+  public async cleanup (userTag: string, cash: number): Promise<void> {
+    if (cash === 0) {
+      await this.db.run('UPDATE gameData SET playerId=0, gameId=0, betId=0, secondBetId=0, followActions=null, secondBetFollowActions=null, lastUpdateDate=datetime(\'now\') WHERE userTag = ?', userTag)
     } else {
-      await this.db.run('UPDATE gameData SET gameId=0, betId=0, secondBetId=0, followActions=null, secondBetFollowActions=null WHERE userTag = ?', storeElement.userTag)
+      await this.db.run('UPDATE gameData SET gameId=0, betId=0, secondBetId=0, followActions=null, secondBetFollowActions=null, lastUpdateDate=datetime(\'now\') WHERE userTag = ?', userTag)
     }
   }
 }

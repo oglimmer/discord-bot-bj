@@ -35,7 +35,7 @@ export const handleCommands = async (interaction: CommandInteraction): Promise<v
     } else if (subcommand === 'split') {
       content = await handleSplit(storeElement)
     } else if (subcommand === 'insurance') {
-      content = await handleInsurance(storeElement, options.getInteger('insurance', true))
+      content = await handleInsurance(storeElement, options.getString('buy', true))
     }
   } catch (error: Error | any) {
     console.log(error)
@@ -69,18 +69,18 @@ const evalResult = async (storeElement: IStoreElement): Promise<string> => {
     await store.save(storeElement)
     return `You have 2nd hand. Your options are ${storeElement.followActions}.`
   } else {
-    return `Game over. ${result} The dealer's total is ${dealerTotal}. The 2nd card was ${dealersSecondCard}, the dealer has also drawn ${dealersAdditionalCard}. Your payout is \\$${payout}.`
+    return `Game over. ${result} The dealer's total is ${dealerTotal}. The 2nd card was ${dealersSecondCard}, the dealer has also drawn ${dealersAdditionalCard}. Your payout is \\$${payout} points.`
   }
 }
 
-async function handleInsurance (storeElement: IStoreElement, insurance: number): Promise<string> {
+async function handleInsurance (storeElement: IStoreElement, insuranceBuy: string): Promise<string> {
   if (!storeElement.betId) {
     return 'No game active. Use `/bj play` to start a game or check your score with `/bj score`'
   }
   if (!(JSON.parse(storeElement.followActions) as string[]).includes('insurance')) {
     return `You cannot hit. Allowed actions are ${storeElement.followActions}`
   }
-  const data = await postInsurance(storeElement, insurance)
+  const data = await postInsurance(storeElement, insuranceBuy)
   const { followActions } = data
   storeElement.followActions = JSON.stringify(data.followActions)
   await store.save(storeElement)
@@ -102,7 +102,7 @@ async function handleSplit (storeElement: IStoreElement): Promise<string> {
   const { firstBetCard1, firstBetCard2, firstBetTotal, secondBetCard1, secondBetCard2, secondBetTotal, followActions, secondBetFollowAction } = betData
   if (followActions.length === 0) {
     if (secondBetFollowAction.length === 0) {
-      await store.cleanup(storeElement, await getPlayer(storeElement.playerId ?? 0))
+      await store.cleanup(storeElement.userTag, (await getPlayer(storeElement.playerId ?? 0)).cash)
       return 'Both hands are completed. ' + await evalResult(storeElement)
     } else {
       storeElement.followActions = JSON.stringify(betData.secondBetFollowAction)
@@ -128,7 +128,7 @@ async function handleDouble (storeElement: IStoreElement): Promise<string> {
   }
   const data = await postDouble(storeElement)
   const { drawnCard, yourTotal } = data
-  await store.cleanup(storeElement, await getPlayer(storeElement.playerId ?? 0))
+  await store.cleanup(storeElement.userTag, (await getPlayer(storeElement.playerId ?? 0)).cash)
   return `You have drawn ${drawnCard}, which brings your total to ${yourTotal}. ` + await evalResult(storeElement)
 }
 
@@ -140,7 +140,7 @@ async function handleStand (storeElement: IStoreElement): Promise<string> {
     return `You cannot hit. Allowed actions are ${storeElement.followActions}`
   }
   await postStand(storeElement)
-  await store.cleanup(storeElement, await getPlayer(storeElement.playerId ?? 0))
+  await store.cleanup(storeElement.userTag, (await getPlayer(storeElement.playerId ?? 0)).cash)
   return await evalResult(storeElement)
 }
 
@@ -158,7 +158,7 @@ async function handleHit (storeElement: IStoreElement): Promise<string> {
     drawnCard, yourTotal, followActions
   } = data
   if (data.followActions.length === 0) {
-    await store.cleanup(storeElement, await getPlayer(storeElement.playerId ?? 0))
+    await store.cleanup(storeElement.userTag, (await getPlayer(storeElement.playerId ?? 0)).cash)
     return `You have drawn ${drawnCard}, which brings your total to ${yourTotal}. ` + await evalResult(storeElement)
   } else {
     return `You have drawn ${drawnCard}, which brings your total to ${yourTotal}. Your options are ${followActions.join(', ')}.`
@@ -167,8 +167,12 @@ async function handleHit (storeElement: IStoreElement): Promise<string> {
 
 async function handleGetPlayer (storeElement: IStoreElement): Promise<string> {
   console.log(`Check player ${storeElement.playerId!} for score`)
-  const data = await getPlayer(storeElement.playerId ?? 0)
-  return `You have \\$${data.cash}`
+  try {
+    const data = await getPlayer(storeElement.playerId ?? 0)
+    return `You have ${data.cash} points`
+  } catch (err) {
+    return 'You have no running game. Start one via `/bj play 100`'
+  }
 }
 
 async function handleHighscore (): Promise<string> {
@@ -213,7 +217,7 @@ async function handlePlay (storeElement: IStoreElement, betValue: number): Promi
       followActions
     } = betData
     if (followActions.length === 0) {
-      await store.cleanup(storeElement, await getPlayer(storeElement.playerId ?? 0))
+      await store.cleanup(storeElement.userTag, (await getPlayer(storeElement.playerId ?? 0)).cash)
       return `A game has started and your bet has been placed. Your cards: ${card1} and ${card2}. The dealer's open card ${dealersCard}. Your total is ${yourTotal}. ` + await evalResult(storeElement)
     } else {
       return `A game has started and your bet has been placed. Your cards: ${card1} and ${card2}. The dealer's open card ${dealersCard}. Your total is ${yourTotal}. Your options are ${followActions.join(', ')}.`
