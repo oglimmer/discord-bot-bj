@@ -55,7 +55,7 @@ export class Store {
           followActions: '',
           lastUpdateDate: new Date()
         }
-        await this.cleanup(userTag, 0)
+        await this.cleanup(userTag, -1)
       }
     } else {
       row = {
@@ -74,7 +74,9 @@ export class Store {
   }
 
   public async cleanup (userTag: string, cash: number): Promise<void> {
-    if (cash === 0) {
+    if (cash === -1) {
+      await this.db.run('UPDATE gameData SET deckId=0, playerId=0, gameId=0, betId=0, secondBetId=0, followActions=null, secondBetFollowActions=null, lastUpdateDate=datetime(\'now\') WHERE userTag = ?', userTag)
+    } else if (cash === 0) {
       await this.db.run('UPDATE gameData SET playerId=0, gameId=0, betId=0, secondBetId=0, followActions=null, secondBetFollowActions=null, lastUpdateDate=datetime(\'now\') WHERE userTag = ?', userTag)
     } else {
       await this.db.run('UPDATE gameData SET gameId=0, betId=0, secondBetId=0, followActions=null, secondBetFollowActions=null, lastUpdateDate=datetime(\'now\') WHERE userTag = ?', userTag)
