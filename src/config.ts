@@ -1,5 +1,5 @@
 export default {
-  clientId: 'xxx',
-  token: 'xxx',
+  clientId: '',
+  token: '',
   dbPath: '.'
 }

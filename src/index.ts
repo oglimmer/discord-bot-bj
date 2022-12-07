@@ -25,7 +25,11 @@ async function init (): Promise<void> {
     await commandHandler.handleCommands(interaction)
   })
 
-  void client.login(config.token)
+  if (config.token) {
+    void client.login(config.token)
+  } else {
+    console.log('Simulated start completed. Missing token.')
+  }
 }
 
 void init()
