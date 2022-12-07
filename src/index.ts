@@ -3,23 +3,29 @@ import {
   IntentsBitField
 } from 'discord.js'
 import { registerCommands } from './registerCommands'
-import { handleCommands } from './handleCommands'
+import { CommandHandler } from './handleCommands'
 
 import config from './config'
 
-const client = new Client({ intents: [IntentsBitField.Flags.Guilds] })
+async function init (): Promise<void> {
+  const client = new Client({ intents: [IntentsBitField.Flags.Guilds] })
 
-client.once('ready', async () => {
-  await registerCommands(client.guilds.cache)
-  console.log('Ready!')
-})
+  client.once('ready', async () => {
+    await registerCommands(client.guilds.cache)
+    console.log('Ready!')
+  })
 
-client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isCommand()) {
-    return
-  }
+  const commandHandler = await CommandHandler.build()
 
-  await handleCommands(interaction)
-})
+  client.on('interactionCreate', async (interaction) => {
+    if (!interaction.isCommand()) {
+      return
+    }
 
-void client.login(config.token)
+    await commandHandler.handleCommands(interaction)
+  })
+
+  void client.login(config.token)
+}
+
+void init()

@@ -18,13 +18,14 @@ export interface IStoreElement {
 export class Store {
   private db!: Database
 
-  constructor () {
-    void (async () => {
-      await this.init()
-    })()
+  static async build (): Promise<Store> {
+    return await new Store().init()
   }
 
-  public async init (): Promise<void> {
+  private constructor () {
+  }
+
+  private async init (): Promise<Store> {
     sqlite3.verbose()
     this.db = await open({
       filename: `${config.dbPath}/database.db`,
@@ -42,6 +43,7 @@ export class Store {
       secondBetFollowActions VARCHAR NULL,
       lastUpdateDate TEXT NOT NULL
       )`)
+    return this
   }
 
   public async get (userTag: string): Promise<IStoreElement> {
