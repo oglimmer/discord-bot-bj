@@ -21,6 +21,7 @@ export const handleDouble = async (userTag: string): Promise<string> => {
   }
   const data = await postDouble(storeElement)
   const { drawnCard, yourTotal } = data
-  await (await PersistentDataStorage.instance()).cleanup(storeElement.userTag, (await getPlayer(storeElement.playerId ?? 0)).cash)
+  const playerResponse = await getPlayer(storeElement.playerId ?? 0)
+  await persistentDataStorage.cleanup(storeElement.userTag, playerResponse.cash)
   return `You have drawn ${drawnCard}, which brings your total to ${yourTotal}. ` + await evalResult(storeElement)
 }

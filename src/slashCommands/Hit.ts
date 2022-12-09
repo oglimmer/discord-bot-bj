@@ -21,12 +21,11 @@ export const handleHit = async (userTag: string): Promise<string> => {
   }
   const data = await postHit(storeElement)
   storeElement.followActions = JSON.stringify(data.followActions)
-  await (await PersistentDataStorage.instance()).save(storeElement)
-  const {
-    drawnCard, yourTotal, followActions
-  } = data
+  await persistentDataStorage.save(storeElement)
+  const { drawnCard, yourTotal, followActions } = data
   if (data.followActions.length === 0) {
-    await (await PersistentDataStorage.instance()).cleanup(storeElement.userTag, (await getPlayer(storeElement.playerId ?? 0)).cash)
+    const playerResponse = await getPlayer(storeElement.playerId ?? 0)
+    await persistentDataStorage.cleanup(storeElement.userTag, playerResponse.cash)
     return `You have drawn ${drawnCard}, which brings your total to ${yourTotal}. ` + await evalResult(storeElement)
   } else {
     return `You have drawn ${drawnCard}, which brings your total to ${yourTotal}. Your options are ${followActions.join(', ')}.`

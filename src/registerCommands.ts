@@ -18,10 +18,7 @@ import { getStandSubCommand } from './slashCommands/Stand'
 import { getHitSubCommand } from './slashCommands/Hit'
 import { getHelpSubCommand } from './slashCommands/Help'
 
-const {
-  token,
-  clientId
-} = config
+const { token, clientId } = config
 
 export const registerCommands = async (guildIds: Collection<Snowflake, Guild>): Promise<void> => {
   const commands = [

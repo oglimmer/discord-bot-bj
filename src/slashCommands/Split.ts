@@ -23,19 +23,20 @@ export const handleSplit = async (userTag: string): Promise<string> => {
   const { firstBetCard1, firstBetCard2, firstBetTotal, secondBetCard1, secondBetCard2, secondBetTotal, followActions, secondBetFollowAction } = betData
   if (followActions.length === 0) {
     if (secondBetFollowAction.length === 0) {
-      await (await PersistentDataStorage.instance()).cleanup(storeElement.userTag, (await getPlayer(storeElement.playerId ?? 0)).cash)
+      const playerResponse = await getPlayer(storeElement.playerId ?? 0)
+      await persistentDataStorage.cleanup(storeElement.userTag, playerResponse.cash)
       return `Both hands are completed. ${await evalResult(storeElement)}`
     } else {
       storeElement.followActions = JSON.stringify(betData.secondBetFollowAction)
       storeElement.betId = betData.secondBetId
-      await (await PersistentDataStorage.instance()).save(storeElement)
+      await persistentDataStorage.save(storeElement)
       return `Your first hand is ${firstBetCard1} and ${firstBetCard2}, with a total of ${firstBetTotal}. Your second hand is ${secondBetCard1} and ${secondBetCard2}, with a total of ${secondBetTotal}. No actions available for first hand. The second had can do ${secondBetFollowAction.join(', ')}.`
     }
   } else {
     storeElement.secondBetId = betData.secondBetId
     storeElement.followActions = JSON.stringify(betData.followActions)
     storeElement.secondBetFollowActions = JSON.stringify(betData.secondBetFollowAction)
-    await (await PersistentDataStorage.instance()).save(storeElement)
+    await persistentDataStorage.save(storeElement)
     return `Your first hand is ${firstBetCard1} and ${firstBetCard2}, with a total of ${firstBetTotal}. Your second hand is ${secondBetCard1} and ${secondBetCard2}, with a total of ${secondBetTotal}. You will play the first hand next, your options for the first hand are ${followActions.join(', ')}.`
   }
 }
