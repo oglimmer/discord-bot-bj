@@ -8,6 +8,15 @@ import { REST } from '@discordjs/rest'
 import { Routes } from 'discord-api-types/v9'
 
 import config from './config'
+import { getHighscoreSubCommand } from './slashCommands/Highscore'
+import { getPlaySubCommand } from './slashCommands/Play'
+import { getScoreSubCommand } from './slashCommands/Score'
+import { getInsuranceSubCommand } from './slashCommands/Insurance'
+import { getSplitSubCommand } from './slashCommands/Split'
+import { getDoubleSubCommand } from './slashCommands/Double'
+import { getStandSubCommand } from './slashCommands/Stand'
+import { getHitSubCommand } from './slashCommands/Hit'
+import { getHelpSubCommand } from './slashCommands/Help'
 
 const {
   token,
@@ -18,60 +27,16 @@ export const registerCommands = async (guildIds: Collection<Snowflake, Guild>): 
   const commands = [
     new SlashCommandBuilder()
       .setName('bj')
-      .setDescription('Play BlackJack on Discord!')
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('help')
-          .setDescription('Explains how this command works')
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('highscore')
-          .setDescription('get the highscore')
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('score')
-          .setDescription('Get the score for a player')
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('play')
-          .setDescription('Create a game and place your bet')
-          .addIntegerOption(option =>
-            option.setName('bet')
-              .setDescription('The amount to bet ($1 to $1000)')
-              .setRequired(true))
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('hit')
-          .setDescription('hit')
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('stand')
-          .setDescription('stand')
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('double')
-          .setDescription('double')
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('split')
-          .setDescription('split')
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('insurance')
-          .setDescription('do and do not buy an insurance')
-          .addStringOption(option =>
-            option.setName('buy')
-              .setDescription('yes or no')
-              .setRequired(true))
-      )
+      .setDescription('Play.ts BlackJack on Discord!')
+      .addSubcommand(getHelpSubCommand())
+      .addSubcommand(getHighscoreSubCommand())
+      .addSubcommand(getScoreSubCommand())
+      .addSubcommand(getPlaySubCommand())
+      .addSubcommand(getHitSubCommand())
+      .addSubcommand(getStandSubCommand())
+      .addSubcommand(getDoubleSubCommand())
+      .addSubcommand(getSplitSubCommand())
+      .addSubcommand(getInsuranceSubCommand())
   ]
     .map(command => command.toJSON())
 

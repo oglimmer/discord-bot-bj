@@ -3,7 +3,7 @@ import { open, Database } from 'sqlite'
 
 import config from './config'
 
-export interface IStoreElement {
+export interface IGameData {
   userTag: string
   playerId?: number
   deckId?: number
@@ -15,23 +15,8 @@ export interface IStoreElement {
   lastUpdateDate: Date | string
 }
 
-export class Store {
-  private db!: Database
-
-  static async build (): Promise<Store> {
-    return await new Store().init()
-  }
-
-  private constructor () {
-  }
-
-  private async init (): Promise<Store> {
-    sqlite3.verbose()
-    this.db = await open({
-      filename: `${config.dbPath}/database.db`,
-      driver: sqlite3.Database
-    })
-    await this.db.exec(`CREATE TABLE IF NOT EXISTS gameData (
+const DB_INIT_STMT = [
+  `CREATE TABLE IF NOT EXISTS gameData (
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
       userTag TEXT NOT NULL UNIQUE,
       playerId INTEGER NULL,
@@ -42,12 +27,38 @@ export class Store {
       followActions VARCHAR NULL,
       secondBetFollowActions VARCHAR NULL,
       lastUpdateDate TEXT NOT NULL
-      )`)
+      )`
+]
+
+export class PersistentDataStorage {
+  private static _instance: PersistentDataStorage
+  static async instance (): Promise<PersistentDataStorage> {
+    if (!PersistentDataStorage._instance) {
+      PersistentDataStorage._instance = new PersistentDataStorage()
+      await PersistentDataStorage._instance.init()
+    }
+    return PersistentDataStorage._instance
+  }
+
+  private db!: Database
+
+  private constructor () {
+  }
+
+  private async init (): Promise<PersistentDataStorage> {
+    sqlite3.verbose()
+    this.db = await open({
+      filename: `${config.dbPath}/database.db`,
+      driver: sqlite3.Database
+    })
+    for await (const stmt of DB_INIT_STMT) {
+      await this.db.exec(stmt)
+    }
     return this
   }
 
-  public async get (userTag: string): Promise<IStoreElement> {
-    let row: IStoreElement | undefined = await this.db.get('SELECT * FROM gameData WHERE userTag = ?', userTag)
+  public async load (userTag: string): Promise<IGameData> {
+    let row: IGameData | undefined = await this.db.get('SELECT * FROM gameData WHERE userTag = ?', userTag)
     if (row) {
       // sqlite has not date/time support. the date is stored as a string in format "2022-12-04 22:12:46", but in UTC without Z at the end
       row.lastUpdateDate = new Date(`${row.lastUpdateDate as string}Z`)
@@ -70,7 +81,7 @@ export class Store {
     return row
   }
 
-  public async save (storeElement: IStoreElement): Promise<void> {
+  public async save (storeElement: IGameData): Promise<void> {
     await this.db.run('UPDATE gameData SET playerId=?, deckId=?, gameId=?, betId=?, secondBetId=?, followActions=?, secondBetFollowActions=? WHERE userTag = ?',
       storeElement.playerId, storeElement.deckId, storeElement.gameId, storeElement.betId, storeElement.secondBetId, storeElement.followActions, storeElement.secondBetFollowActions, storeElement.userTag)
   }
