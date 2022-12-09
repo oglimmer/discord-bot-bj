@@ -1,10 +1,12 @@
-# a discord bot to play blackjack
+# A Discord bot to play blackjack
 
-Uses the bj.oglimmer.de/
+Uses the bj.oglimmer.de/ as the backend.
+
+To join my Discord server and use the Bot, click here https://discord.gg/FwDFmBtFmr
 
 # how to setup
 
-Edit src/config.ts
+Edit src/config.ts before starting the bot
 
 ```bash
 npm ci
