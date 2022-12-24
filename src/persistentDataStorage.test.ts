@@ -1,9 +1,11 @@
 import { expect, test } from '@jest/globals'
-import { PersistentDataStorage } from './persistentDataStorage'
 
 process.env.clientId = 'fake'
 process.env.token = 'fake'
-process.env.dbPath = 'fake'
+process.env.dbPath = './'
+
+// eslint-disable-next-line import/first
+import { PersistentDataStorage } from './persistentDataStorage'
 
 test('get empty', async () => {
   const store = await PersistentDataStorage.instance()
