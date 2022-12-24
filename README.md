@@ -6,7 +6,7 @@ To join my Discord server and use the Bot, click here https://discord.gg/FwDFmBt
 
 # how to setup
 
-Edit src/config.ts before starting the bot
+Copy sample.env to .env and edit before starting the bot
 
 ```bash
 npm ci
