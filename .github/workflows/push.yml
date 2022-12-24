@@ -51,3 +51,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+
+      - name: Trigger Re-Deploy Stage
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: '${{ secrets.update_url }}'
+          method: 'GET'
+        if: ${{ secrets.update_url }} != 0
