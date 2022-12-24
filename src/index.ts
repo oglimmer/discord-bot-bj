@@ -12,7 +12,7 @@ async function init (): Promise<void> {
 
   client.once('ready', async () => {
     await registerCommands(client.guilds.cache)
-    console.log('Ready!')
+    console.log('Lock and loaded!')
   })
 
   client.on('interactionCreate', async (interaction) => {
@@ -23,11 +23,7 @@ async function init (): Promise<void> {
     await handleCommands(interaction)
   })
 
-  if (config.token) {
-    void client.login(config.token)
-  } else {
-    console.log('Simulated start completed. Missing token.')
-  }
+  void client.login(config.token)
 }
 
 void init()

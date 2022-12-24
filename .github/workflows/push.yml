@@ -54,9 +54,9 @@ jobs:
 
       - name: Trigger Re-Deploy Stage
         env:
-          SECRET_UPDATE_URL: ${{ secrets.update_url }}
+          SECRET_UPDATE_URL: ${{ secrets.UPDATE_URL }}
         uses: fjogeleit/http-request-action@v1
         with:
-          url: '${{ secrets.update_url }}'
+          url: '${{ secrets.UPDATE_URL }}'
           method: 'GET'
         if: env.SECRET_UPDATE_URL != null
