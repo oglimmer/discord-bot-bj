@@ -1,6 +1,10 @@
 import { expect, test } from '@jest/globals'
 import { PersistentDataStorage } from './persistentDataStorage'
 
+process.env.clientId = 'fake'
+process.env.token = 'fake'
+process.env.dbPath = 'fake'
+
 test('get empty', async () => {
   const store = await PersistentDataStorage.instance()
   const userTag = `userid001${Math.random()}`

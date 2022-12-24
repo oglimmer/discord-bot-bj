@@ -8,11 +8,15 @@ const configObj = {
   dbPath: process.env.dbPath!
 }
 
+let missingConfigInfo = ''
 for (const [key, value] of Object.entries(configObj)) {
   if (!value) {
-    console.error(`No config found for ${key}. Abort`)
-    process.exit(-1)
+    missingConfigInfo += `No config found for ${key}. `
   }
+}
+if (missingConfigInfo) {
+  console.error(`${missingConfigInfo}Abort.`)
+  process.exit(0)
 }
 
 export default configObj
