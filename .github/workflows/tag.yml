@@ -26,3 +26,4 @@ jobs:
       uses: ad-m/github-push-action@master
       with:
         tags: true
+        github_token: ${{ secrets.GH_PAT }}
