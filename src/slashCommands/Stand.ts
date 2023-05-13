@@ -1,4 +1,4 @@
-import { SlashCommandSubcommandBuilder } from '@discordjs/builders'
+import type { SlashCommandSubcommandBuilder } from '@discordjs/builders'
 import { PersistentDataStorage } from '../persistentDataStorage'
 import { getPlayer, postStand } from '../remote-api'
 import { evalResult } from '../handleCommands'

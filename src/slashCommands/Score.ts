@@ -1,6 +1,6 @@
 import { PersistentDataStorage } from '../persistentDataStorage'
 import { getPlayer } from '../remote-api'
-import { SlashCommandSubcommandBuilder } from '@discordjs/builders'
+import type { SlashCommandSubcommandBuilder } from '@discordjs/builders'
 
 export const getScoreSubCommand = (): ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder) => {
   return subcommand =>

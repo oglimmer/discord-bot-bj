@@ -1,5 +1,6 @@
-import axios, { AxiosResponse } from 'axios'
-import { IGameData } from './persistentDataStorage'
+import axios from 'axios'
+import type { AxiosResponse } from 'axios'
+import type { IGameData } from './persistentDataStorage'
 
 const SERVER_ROOT = 'https://bj.oglimmer.de'
 

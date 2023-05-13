@@ -1,4 +1,4 @@
-import { SlashCommandSubcommandBuilder } from '@discordjs/builders'
+import type { SlashCommandSubcommandBuilder } from '@discordjs/builders'
 
 export const getHelpSubCommand = (): ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder) => {
   return subcommand =>

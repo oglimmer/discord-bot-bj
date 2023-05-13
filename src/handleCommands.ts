@@ -1,6 +1,7 @@
-import { IGameData, PersistentDataStorage } from './persistentDataStorage'
+import type { IGameData } from './persistentDataStorage'
+import { PersistentDataStorage } from './persistentDataStorage'
 import { getBet } from './remote-api'
-import {
+import type {
   CommandInteraction,
   CommandInteractionOptionResolver
 } from 'discord.js'

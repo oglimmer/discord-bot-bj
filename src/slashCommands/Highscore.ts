@@ -1,5 +1,5 @@
 import { getHighscore } from '../remote-api'
-import { SlashCommandSubcommandBuilder } from '@discordjs/builders'
+import type { SlashCommandSubcommandBuilder } from '@discordjs/builders'
 
 export const getHighscoreSubCommand = (): ((subcommandGroup: SlashCommandSubcommandBuilder) => SlashCommandSubcommandBuilder) => {
   return subcommand =>

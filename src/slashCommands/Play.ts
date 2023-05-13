@@ -1,6 +1,7 @@
 import { getPlayer, postBet, postDeck, postGame, postPlayer } from '../remote-api'
-import { SlashCommandSubcommandBuilder } from '@discordjs/builders'
-import { IGameData, PersistentDataStorage } from '../persistentDataStorage'
+import type { SlashCommandSubcommandBuilder } from '@discordjs/builders'
+import type { IGameData } from '../persistentDataStorage'
+import { PersistentDataStorage } from '../persistentDataStorage'
 import { AxiosError } from 'axios'
 import { evalResult } from '../handleCommands'
 

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
-import {
+import type {
   Collection,
   Guild,
   Snowflake
