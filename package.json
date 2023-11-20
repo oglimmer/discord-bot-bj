@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@discordjs/builders": "^1.7.0",
-    "@discordjs/rest": "^2.1.0",
+    "@discordjs/rest": "^2.2.0",
     "@types/node": "^20.9.2",
     "axios": "^1.6.1",
     "discord-api-types": "^0.37.63",
