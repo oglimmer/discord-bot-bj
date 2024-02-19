@@ -20,7 +20,7 @@
     "axios": "^1.6.7",
     "discord-api-types": "^0.37.70",
     "discord.js": "^14.14.1",
-    "dotenv": "^16.4.3",
+    "dotenv": "^16.4.4",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "ts-node": "^10.9.2"
