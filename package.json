@@ -18,7 +18,7 @@
     "@discordjs/rest": "^2.2.0",
     "@types/node": "^20.11.30",
     "axios": "^1.6.8",
-    "discord-api-types": "^0.37.76",
+    "discord-api-types": "^0.37.78",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.5",
     "sqlite": "^5.1.1",
