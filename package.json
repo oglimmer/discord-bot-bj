@@ -14,7 +14,7 @@
   "author": "Oli Zimpasser",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^1.7.0",
+    "@discordjs/builders": "^1.8.2",
     "@discordjs/rest": "^2.2.0",
     "@types/node": "^20.12.7",
     "axios": "^1.6.8",
